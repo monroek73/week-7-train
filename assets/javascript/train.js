@@ -30,12 +30,13 @@ $("#addTrain").on("click", function()
 	minutesAway = $('#minutesAway').val().trim();
 
 	//Code for setting values in the database
-	database.ref().set({
-		trainName: trainName,
-		destination: destination,
-		frequency: frequency,
-		nextArrival: nextArrival,
-		minutesAway: minutesAway,
+	// database.ref().set({
+	// 	trainName: trainName,
+	// 	destination: destination,
+	// 	frequency: frequency,
+	// 	nextArrival: nextArrival,
+	// 	minutesAway: minutesAway
+// });	
 
     //Code for setting the push
    	database.ref().push({
@@ -43,17 +44,17 @@ $("#addTrain").on("click", function()
 		destination: destination,
 		frequency: frequency,
 		nextArrival: nextArrival,
-		minutesAway: minutesAway,
-       
-})
-   	// Clear all of the text-boxes
+		minutesAway: minutesAway
+    });
+
+// Clear all of the text-boxes
    	$('#trainName').val("");
    	$('#destination').val("");
    	$('#frequency').val("");
    	$('#nextArrival').val("");
    	$('#minutesAway').val("");
-
-	// Refresh the page
+     
+// Refresh the page
 	return false;
 });
 
@@ -83,11 +84,10 @@ $("#minutesAway").html(childSnapshot.val().minutesAway);
 
 });
 
-dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function
-(
+database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(){
  $("#trainName").html(snapshot.val().trainName);
  $("#destination").html(snapshot.val().destination);
  $("#frequency").html(snapshot.val().frequency);
  $("#nextArrival").html(snapshot.val().nextArrival);
  $("#minutesAway").html(snapshot.val().minutesAway);
- )
+ });
