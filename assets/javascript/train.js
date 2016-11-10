@@ -1,5 +1,6 @@
  // Initialize Firebase
-  var config = {
+
+var config = {
     apiKey: "AIzaSyBb8qB4GMIc78BcdFrNGTHZRClIfiz_uKA",
     authDomain: "train-project-c4502.firebaseapp.com",
     databaseURL: "https://train-project-c4502.firebaseio.com",
@@ -8,9 +9,9 @@
   };
   firebase.initializeApp(config);
 
-//Create a variable to reference the database.
-
 var database = firebase.database();
+
+//Create a variable to reference the database.
 
 //Initial Values
 var trainName ="";
@@ -21,73 +22,99 @@ var minutesAway="";
 
 //Capture clik button
 $("#addTrain").on("click", function()
+
+// Grabbed values from text-boxes
 {
-//Grabbed values from tex-boxes
-	trainName = $('#trainName').val().trim();
-	destination= $('#destination').val().trim();
-	frequency= $('#frequency').val().trim();
-	nextArrival = $('#nextArrival').val().trim();
-	minutesAway = $('#minutesAway').val().trim();
+	trainName = $('#trainName').val().trim(),
+	destination= $('#destination').val().trim(),
+	frequency= $('#frequency').val().trim(),
+	nextArrival = $('#nextArrival').val().trim(),
+	minutesAway = $('#minutesAway').val().trim(),
+ 
+     // //Code for setting the push
+     // database.ref().push(newTrain);
+   	 // console.log(newTrain.trainName),
+   	 // console.log(newTrain.destination),
+   	 // console.log(newTrain.frequency),
+   	 // console.log(newTrain.nextArrival)
 
-	//Code for setting values in the database
-	// database.ref().set({
-	// 	trainName: trainName,
-	// 	destination: destination,
-	// 	frequency: frequency,
-	// 	nextArrival: nextArrival,
-	// 	minutesAway: minutesAway
-// });	
-
-    //Code for setting the push
-   	database.ref().push({
-		trainName: trainName,
-		destination: destination,
-		frequency: frequency,
-		nextArrival: nextArrival,
-		minutesAway: minutesAway
-    });
-
-// Clear all of the text-boxes
+//Clearing out data
    	$('#trainName').val("");
    	$('#destination').val("");
    	$('#frequency').val("");
-   	$('#nextArrival').val("");
-   	$('#minutesAway').val("");
-     
+    $('#nextArrival').val("");
+   	$('#minutesAway').val(""); 	 
+
+//pushing the data to the root of the datapush
+ database.ref().push({
+	 trainName: trainName,
+	 destination: destination,
+     frequency: frequency,
+	 nextArrival: nextArrival,
+	 minutesAway: minutesAway,
+	 dataAdded: firebase.database.ServerValue.TIMESTAMP
+ })
+
 // Refresh the page
 	return false;
 });
 
 //Firebase watcher + initial loader
 
-database.ref().on("child_added", function(childSnapshot)
+database.ref().on("child_added", function(Snapshot)
 {
 	//console log
-	console.log(childSnapshot.val());
-	console.log(childSnapshot.val().trainName);
-	console.log(childSnapshot.val().destination);
-	console.log(childSnapshot.val().frequency);
-	console.log(childSnapshot.val().nextArrival);
-	console.log(childSnapshot.val().minutesAway);
+	console.log(Snapshot.val());
+	console.log(Snapshot.val());
+	console.log(Snapshot.val().trainName);
+	console.log(Snapshot.val().destination);
+	// console.log(Snapshot.val().frequency);
+	// console.log(childSnapshot.val().nextArrival);
+	// console.log(childSnapshot.val().minutesAway);
 
-//Change the HTML to reflect
-$("#trainName").html(childSnapshot.val().trainName);
-$("#destination").html(childSnapshot.val().destination);
-$("#frequency").html(childSnapshot.val().frequency);
-$("#nextArrival").html(childSnapshot.val().nextArrival);
-$("#minutesAway").html(childSnapshot.val().minutesAway);
+$("#trainName").html(Snapshot.val().trainName);
+$("#destination").html(Snapshot.val().destination);
+$("#frequency").html("15 minutes");
+$("#nextArrival").html("15 minutes");
+$("#minutesAway").html("15 minutes");
+
+// full list of items to the well
+$('#TrainTable tbody').append("<tr><td>"
+	+Snapshot.val().trainName+" </td><td>"
+	+Snapshot.val().destination+" </td><td>"
+	+Snapshot.val().frequency+"</td><td>"
+	+Snapshot.val().nextArrival+"</td><td>"
+	+Snapshot.val().minutesAway+
+	"</td></tr>")
+},
 
 //Handle errors
-},
-    function(errorObject){
+function(errorObject){
 	console.log("Errors handled: " + errorObject.code)
-
 });
 
-database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(){
- $("#trainName").html(snapshot.val().trainName);
- $("#destination").html(snapshot.val().destination);
- $("#frequency").html(snapshot.val().frequency);
- $("#nextArrival").html(snapshot.val().nextArrival);
- $("#minutesAway").html(snapshot.val().minutesAway);
- });
+// database.ref().on("child.snapshot", function(Snapshot)
+// {
+// 	//console log
+// 	console.log(child.Snapshot.val());
+// 	console.log(child.Snapshot.val().trainName);
+// 	console.log(child.Snapshot.val().destination);
+// 	// console.log(Snapshot.val().frequency);
+// 	// console.log(childSnapshot.val().nextArrival);
+// 	// console.log(childSnapshot.val().minutesAway);
+
+// //Change the HTML to reflect
+// $("#trainName").html(child.Snapshot.val().trainName);
+// $("#destination").html(child.Snapshot.val().destination);
+// $("#frequency").html("15 minutes");
+// $("#nextArrival").html("15 minutes");
+// $("#minutesAway").html("15 minutes")
+
+dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(){
+// Change the HTML to reflect
+$("#trainName").html(snapshop.val().trainName);
+$("#destination").html(snapshop.val().destination);
+$("frequency").html(snapshop.val().frequency);
+$("nextArrival").html(snapshop.val().nextArrival);
+$("minutesAway").html(snapshop.val().minutesAway);
+});
